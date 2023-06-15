@@ -85,9 +85,9 @@ fi
 
 # Installing required system packages to support the rendering of math
 # notation in the HTML documentation
-sudo -E apt-get -yq update
-sudo -E apt-get -yq remove texlive-binaries --purge
-sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes \
+apt-get -yq update
+apt-get -yq remove texlive-binaries --purge
+apt-get -yq --no-install-suggests --no-install-recommends --force-yes \
     install dvipng texlive-latex-base texlive-latex-extra \
     texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended\
     latexmk
@@ -95,12 +95,7 @@ sudo -E apt-get -yq --no-install-suggests --no-install-recommends --force-yes \
 python3 -m venv venv
 . venv/bin/activate
 python --version
-pip install wheel setuptools numpy matplotlib sphinx pillow sphinx_rtd_theme \
-    numpydoc sphinx-gallery sphinx-issues~=1.0 sphinx-copybutton \
-    --progress-bar off
-
-# Build and install pydicom in dev mode
-pip install -e .
+pip install -e .[docs]
 
 # The pipefail is requested to propagate exit code
 set -o pipefail && cd doc && make $MAKE_TARGET 2>&1 | tee ~/log.txt

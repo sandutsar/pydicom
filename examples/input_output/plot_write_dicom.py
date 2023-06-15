@@ -12,12 +12,13 @@ have to change UIDs to valid values and add all required DICOM data elements.
 # authors : Guillaume Lemaitre <g.lemaitre58@gmail.com>
 # license : MIT
 
+import datetime
 import os
 import tempfile
-import datetime
 
 import pydicom
 from pydicom.dataset import FileDataset, FileMetaDataset
+from pydicom.uid import UID
 
 # Create some temporary filenames
 suffix = '.dcm'
@@ -27,9 +28,9 @@ filename_big_endian = tempfile.NamedTemporaryFile(suffix=suffix).name
 print("Setting file meta information...")
 # Populate required values for file meta information
 file_meta = FileMetaDataset()
-file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.2'
-file_meta.MediaStorageSOPInstanceUID = "1.2.3"
-file_meta.ImplementationClassUID = "1.2.3.4"
+file_meta.MediaStorageSOPClassUID = UID('1.2.840.10008.5.1.4.1.1.2')
+file_meta.MediaStorageSOPInstanceUID = UID("1.2.3")
+file_meta.ImplementationClassUID = UID("1.2.3.4")
 
 print("Setting dataset values...")
 # Create the FileDataset instance (initially no data elements, but file_meta
@@ -67,10 +68,10 @@ ds.save_as(filename_big_endian)
 
 # reopen the data just for checking
 for filename in (filename_little_endian, filename_big_endian):
-    print('Load file {} ...'.format(filename))
+    print(f'Load file {filename} ...')
     ds = pydicom.dcmread(filename)
     print(ds)
 
     # remove the created file
-    print('Remove file {} ...'.format(filename))
+    print(f'Remove file {filename} ...')
     os.remove(filename)
